@@ -6,6 +6,7 @@ import { Calendar, MapPin, Mail, Phone, Linkedin, Download, Award, Briefcase, Us
 import { AnimatedGradient } from "./ui/animated-gradient"
 import { FormattedMessage } from "react-intl"
 import { useState } from "react"
+import jsPDF from 'jspdf'
 
 const Resume = () => {
   const [ref, inView] = useInView({
@@ -79,6 +80,14 @@ const Resume = () => {
     "Suporte técnico em eventos educacionais e de mentoria"
   ]
 
+  const skills = [
+    "Linguagens: C#, JavaScript, Python, SQL, TypeScript",
+    "Frameworks: .NET, React, Next.js",
+    "Ferramentas: Azure, Docker, Git, Postman, VSCode",
+    "Segurança: Pentest, OSINT, Análise de Malware, Ethical Hacking",
+    "Automação: n8n, Python Scripts, PowerShell"
+  ]
+
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'current': return 'from-green-500 to-emerald-500'
@@ -101,75 +110,194 @@ const Resume = () => {
     try {
       setIsDownloading(true)
       
-      // Gera conteúdo do CV em texto
-      const cvContent = `
-JOÃO RONDON
-Pesquisador em Cibersegurança & Desenvolvedor Full Stack
-
-CONTATO
-📧 Email: jvbarbosa211@gmail.com
-📱 Telefone: +55 65 99268-1781
-📍 Localização: Cuiabá, MT – Brasil
-🔗 LinkedIn: linkedin.com/in/joao-rondon-3453001b1
-
-OBJETIVO
-Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, desenvolvimento full stack e iniciativas de impacto social. Busca oportunidades que unam tecnologia, propósito e aprendizado contínuo.
-
-EXPERIÊNCIA PROFISSIONAL
-
-🚀 Desenvolvedor Full Stack - Amaggi (2023 – Presente)
-• Desenvolvimento de MVPs e novas funcionalidades em .NET e React
-• Foco em performance, usabilidade e design moderno
-• Integração com serviços Azure, APIs REST e bancos de dados
-
-🔧 Técnico de Suporte N2 - Lanlink (Abr 2023 – Out 2023)
-• Suporte técnico a 80 filiais (Brasil e exterior)
-• Instalação e manutenção de balanças industriais e sistemas
-• Suporte remoto e presencial com foco em eficiência operacional
-
-❤️ Investigador Digital Voluntário - Projeto Pessoal (2022 – Presente)
-• Apoio gratuito a vítimas de golpes online: rastreio e denúncia
-• Uso de ferramentas OSINT e técnicas forenses
-• Prevenção e recuperação de casos de fraude digital
-
-💼 Técnico de TI e Recuperação de Dados - Freelancer (2020 – 2022)
-• Manutenção de hardware, redes e recuperação de dados
-• Implantação de sistemas e suporte a usuários
-• Automações com Python para otimização de processos
-
-CERTIFICAÇÕES
-🏆 TryHackMe – Fundamentos de Pentest e Cibersegurança
-🏆 Udemy – Python para Automação e Web Scraping
-🏆 Alura – Git, Docker, Clean Architecture
-🏆 Hack The Box Labs – Análise e exploração de vulnerabilidades
-
-VOLUNTARIADO E PROJETOS
-❤️ Distribuição de 130+ kits anti-COVID em mercado popular com reconhecimento da mídia local
-❤️ Liderança técnica de comunidade internacional com mais de 11 mil membros
-❤️ Suporte técnico em eventos educacionais e de mentoria
-
-IDIOMAS
-🇧🇷 Português: Nativo
-🇺🇸 Inglês: Intermediário
-
-HABILIDADES TÉCNICAS
-• Linguagens: C#, JavaScript, Python, SQL, TypeScript
-• Frameworks: .NET, React, Next.js
-• Ferramentas: Azure, Docker, Git, Postman, VSCode
-• Segurança: Pentest, OSINT, Análise de Malware, Ethical Hacking
-• Automação: n8n, Python Scripts, PowerShell
-      `.trim()
-
-      // Cria e baixa arquivo de texto
-      const blob = new Blob([cvContent], { type: 'text/plain;charset=utf-8' })
-      const link = document.createElement('a')
-      link.href = URL.createObjectURL(blob)
-      link.download = 'CV-Joao-Rondon.txt'
-      link.style.display = 'none'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-      URL.revokeObjectURL(link.href)
+      // Cria novo documento PDF
+      const pdf = new jsPDF()
+      
+      // Configurações
+      let currentY = 20
+      const marginLeft = 20
+      const marginRight = 20
+      const pageWidth = pdf.internal.pageSize.width
+      const usableWidth = pageWidth - marginLeft - marginRight
+      
+      // Nome (título principal)
+      pdf.setFontSize(18)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('João Rondon', marginLeft, currentY)
+      currentY += 10
+      
+      // Informações de contato
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('Cuiabá, MT – Brasil | jvbarbosa211@gmail.com | +55 65 99268-1781', marginLeft, currentY)
+      currentY += 5
+      pdf.text('LinkedIn: linkedin.com/in/joao-rondon-3453001b1', marginLeft, currentY)
+      currentY += 15
+      
+      // Objetivo
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Objetivo', marginLeft, currentY)
+      currentY += 8
+      
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      const objetivoText = 'Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, desenvolvimento full stack e ações de impacto social. Buscando oportunidades que aliem tecnologia, propósito e aprendizado contínuo.'
+      const objetivoLines = pdf.splitTextToSize(objetivoText, usableWidth)
+      pdf.text(objetivoLines, marginLeft, currentY)
+      currentY += objetivoLines.length * 5 + 10
+      
+      // Experiência Profissional
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Experiência Profissional', marginLeft, currentY)
+      currentY += 10
+      
+      // Full Stack Developer – Amaggi
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Full Stack Developer – Amaggi', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('Cuiabá – 2023–Presente', marginLeft, currentY)
+      currentY += 6
+      pdf.text('- Desenvolvimento .NET e React para novos MVPs e funcionalidades.', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Foco em performance, design moderno e usabilidade.', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Integração com serviços em Azure, APIs REST e banco de dados.', marginLeft, currentY)
+      currentY += 10
+      
+      // N2 Support Technician – Lanlink
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('N2 Support Technician – Lanlink', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('Remoto e Presencial – Abril 2023 a Outubro 2023', marginLeft, currentY)
+      currentY += 6
+      pdf.text('- Suporte técnico para 80 filiais (Brasil e exterior).', marginLeft, currentY)
+      currentY += 5
+      const lanlink1 = pdf.splitTextToSize('- Instalação e manutenção de balanças industriais, computadores e sistemas SAP, Citrix, Microsoft.', usableWidth)
+      pdf.text(lanlink1, marginLeft, currentY)
+      currentY += lanlink1.length * 5
+      pdf.text('- Suporte remoto e presencial, com foco em eficiência operacional.', marginLeft, currentY)
+      currentY += 10
+      
+      // Detetive Digital Voluntário
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Detetive Digital Voluntário – Projeto Pessoal', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('Online – 2022–Presente', marginLeft, currentY)
+      currentY += 6
+      pdf.text('- Apoio gratuito a vítimas de golpes online, rastreamento e denúncia.', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Utilização de OSINT, técnicas forenses e prevenção digital.', marginLeft, currentY)
+      currentY += 10
+      
+      // Técnico de TI e Recuperação de Dados
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Técnico de TI e Recuperação de Dados – Freelancer', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('Cuiabá – 2020–2022', marginLeft, currentY)
+      currentY += 6
+      const freelancer1 = pdf.splitTextToSize('- Manutenção de hardware, redes e recuperação de arquivos de HDs danificados.', usableWidth)
+      pdf.text(freelancer1, marginLeft, currentY)
+      currentY += freelancer1.length * 5
+      pdf.text('- Implantação de sistemas, suporte a usuários e automações em Python.', marginLeft, currentY)
+      currentY += 15
+      
+      // Nova página se necessário
+      if (currentY > 230) {
+        pdf.addPage()
+        currentY = 20
+      }
+      
+      // Educação
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Educação', marginLeft, currentY)
+      currentY += 10
+      
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('FIAP – Cyber Defense (2025–2026, em andamento)', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('- Pentest, Forense Digital, Phishing, Malware', marginLeft, currentY)
+      currentY += 8
+      
+      pdf.setFontSize(11)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Ensino Médio – EE Raimundo Pinheiro (2019)', marginLeft, currentY)
+      currentY += 6
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('- Líder de turma e suporte técnico interno', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Participação em projetos escolares de lógica e tecnologia', marginLeft, currentY)
+      currentY += 15
+      
+      // Certificações e Cursos
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Certificações e Cursos', marginLeft, currentY)
+      currentY += 8
+      
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('- TryHackMe – Fundamentos de Pentest e Cibersegurança', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Udemy – Python Automação e Web Scraping', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Alura – Git, Docker, Clean Architecture', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Hack The Box Labs – Exploração e análise de vulnerabilidades', marginLeft, currentY)
+      currentY += 15
+      
+      // Voluntariado e Projetos
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Voluntariado e Projetos', marginLeft, currentY)
+      currentY += 8
+      
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      const voluntario1 = pdf.splitTextToSize('- Distribuição de 130 kits anti-COVID durante a pandemia com equipe local, reconhecido na imprensa.', usableWidth)
+      pdf.text(voluntario1, marginLeft, currentY)
+      currentY += voluntario1.length * 5
+      pdf.text('- Gestão técnica de comunidade internacional com mais de 11 mil membros.', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Apoio técnico a eventos educacionais e mentorias.', marginLeft, currentY)
+      currentY += 15
+      
+      // Habilidades
+      pdf.setFontSize(12)
+      pdf.setFont('helvetica', 'bold')
+      pdf.text('Habilidades', marginLeft, currentY)
+      currentY += 8
+      
+      pdf.setFontSize(10)
+      pdf.setFont('helvetica', 'normal')
+      pdf.text('- Linguagens: C#, JavaScript, Python, SQL', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Frameworks: .NET, React', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Ferramentas: Azure, Docker, Git, Postman, VSCode', marginLeft, currentY)
+      currentY += 5
+      pdf.text('- Idiomas: Português (nativo), Inglês (intermediário)', marginLeft, currentY)
+      
+      // Salva o PDF
+      pdf.save('CV-Joao-Rondon.pdf')
 
       // Feedback visual
       setTimeout(() => {
@@ -177,8 +305,9 @@ HABILIDADES TÉCNICAS
       }, 1500)
       
     } catch (error) {
-      console.error('Erro ao baixar CV:', error)
+      console.error('Erro ao gerar PDF:', error)
       setIsDownloading(false)
+      
       // Fallback: abrir LinkedIn
       window.open('https://linkedin.com/in/joao-rondon-3453001b1', '_blank')
     }
@@ -258,7 +387,7 @@ HABILIDADES TÉCNICAS
               ) : (
                 <>
                   <Download className="w-4 h-4" />
-                  Download CV
+                  Download PDF
                 </>
               )}
             </motion.button>
