@@ -58,6 +58,67 @@ const messages = {
       "Suporte presencial: Atendimento e resolução de problemas técnicos diretamente nas instalações da empresa.",
     "experience.1.description.4":
       "Manutenção de hardware: Configuração e manutenção regular de computadores e demais hardware, garantindo a eficiência e o bom funcionamento dos equipamentos.",
+    
+    // Resume translations
+    "resume.title": "Currículo Profissional",
+    "resume.subtitle": "Minha jornada profissional em cibersegurança e desenvolvimento",
+    "resume.jobTitle": "Pesquisador em Cibersegurança & Desenvolvedor Full Stack",
+    "resume.downloading": "Baixando...",
+    "resume.downloadPdf": "Download PDF",
+    "resume.objective.title": "Objetivo Profissional",
+    "resume.objective.description": "Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, desenvolvimento full stack e iniciativas de impacto social. Busca oportunidades que unam tecnologia, propósito e aprendizado contínuo.",
+    "resume.experience.title": "Experiência Profissional",
+    "resume.certifications.title": "Cursos e Certificações",
+    "resume.volunteer.title": "Voluntariado e Projetos",
+    "resume.languages.title": "Idiomas",
+    "resume.languages.portuguese": "Português",
+    "resume.languages.english": "Inglês",
+    "resume.languages.native": "Nativo",
+    "resume.languages.intermediate": "Intermediário",
+    
+    // Resume experiences
+    "resume.exp.0.title": "Desenvolvedor Full Stack",
+    "resume.exp.0.company": "Amaggi",
+    "resume.exp.0.period": "2023 – Presente",
+    "resume.exp.0.location": "Cuiabá, MT",
+    "resume.exp.0.desc.0": "Desenvolvimento de MVPs e novas funcionalidades em .NET e React",
+    "resume.exp.0.desc.1": "Foco em performance, usabilidade e design moderno",
+    "resume.exp.0.desc.2": "Integração com serviços Azure, APIs REST e bancos de dados",
+    
+    "resume.exp.1.title": "Técnico de Suporte N2",
+    "resume.exp.1.company": "Lanlink",
+    "resume.exp.1.period": "Abr 2023 – Out 2023",
+    "resume.exp.1.location": "Remoto/Presencial",
+    "resume.exp.1.desc.0": "Suporte técnico a 80 filiais (Brasil e exterior)",
+    "resume.exp.1.desc.1": "Instalação e manutenção de balanças industriais e sistemas",
+    "resume.exp.1.desc.2": "Suporte remoto e presencial com foco em eficiência operacional",
+    
+    "resume.exp.2.title": "Investigador Digital Voluntário",
+    "resume.exp.2.company": "Projeto Pessoal",
+    "resume.exp.2.period": "2022 – Presente",
+    "resume.exp.2.location": "Online",
+    "resume.exp.2.desc.0": "Apoio gratuito a vítimas de golpes online: rastreio e denúncia",
+    "resume.exp.2.desc.1": "Uso de ferramentas OSINT e técnicas forenses",
+    "resume.exp.2.desc.2": "Prevenção e recuperação de casos de fraude digital",
+    
+    "resume.exp.3.title": "Técnico de TI e Recuperação de Dados",
+    "resume.exp.3.company": "Freelancer",
+    "resume.exp.3.period": "2020 – 2022",
+    "resume.exp.3.location": "Cuiabá, MT",
+    "resume.exp.3.desc.0": "Manutenção de hardware, redes e recuperação de dados",
+    "resume.exp.3.desc.1": "Implantação de sistemas e suporte a usuários",
+    "resume.exp.3.desc.2": "Automações com Python para otimização de processos",
+    
+    // Resume certifications
+    "resume.cert.0": "TryHackMe – Fundamentos de Pentest e Cibersegurança",
+    "resume.cert.1": "Udemy – Python para Automação e Web Scraping",
+    "resume.cert.2": "Alura – Git, Docker, Clean Architecture",
+    "resume.cert.3": "Hack The Box Labs – Análise e exploração de vulnerabilidades",
+    
+    // Resume volunteer work
+    "resume.volunteer.0": "Distribuição de 130+ kits anti-COVID em mercado popular com reconhecimento da mídia local",
+    "resume.volunteer.1": "Liderança técnica de comunidade internacional com mais de 11 mil membros",
+    "resume.volunteer.2": "Suporte técnico em eventos educacionais e de mentoria",
   },
   en: {
     "nav.about": "About",
@@ -118,6 +179,67 @@ const messages = {
       "On-site support: Attending to and resolving technical issues directly at the company's facilities.",
     "experience.1.description.4":
       "Hardware maintenance: Regular configuration and maintenance of computers and other hardware, ensuring efficiency and proper functioning of equipment.",
+    
+    // Resume translations
+    "resume.title": "Professional Resume",
+    "resume.subtitle": "My professional journey in cybersecurity and development",
+    "resume.jobTitle": "Cybersecurity Researcher & Full Stack Developer",
+    "resume.downloading": "Downloading...",
+    "resume.downloadPdf": "Download PDF",
+    "resume.objective.title": "Professional Objective",
+    "resume.objective.description": "Self-taught professional passionate about cybersecurity and development, with practical experience in technical support, full stack development, and social impact initiatives. Seeking opportunities that combine technology, purpose, and continuous learning.",
+    "resume.experience.title": "Professional Experience",
+    "resume.certifications.title": "Courses and Certifications",
+    "resume.volunteer.title": "Volunteer Work and Projects",
+    "resume.languages.title": "Languages",
+    "resume.languages.portuguese": "Portuguese",
+    "resume.languages.english": "English",
+    "resume.languages.native": "Native",
+    "resume.languages.intermediate": "Intermediate",
+    
+    // Resume experiences
+    "resume.exp.0.title": "Full Stack Developer",
+    "resume.exp.0.company": "Amaggi",
+    "resume.exp.0.period": "2023 – Present",
+    "resume.exp.0.location": "Cuiabá, MT",
+    "resume.exp.0.desc.0": "Development of MVPs and new features in .NET and React",
+    "resume.exp.0.desc.1": "Focus on performance, usability, and modern design",
+    "resume.exp.0.desc.2": "Integration with Azure services, REST APIs, and databases",
+    
+    "resume.exp.1.title": "N2 Support Technician",
+    "resume.exp.1.company": "Lanlink",
+    "resume.exp.1.period": "Apr 2023 – Oct 2023",
+    "resume.exp.1.location": "Remote/On-site",
+    "resume.exp.1.desc.0": "Technical support for 80 branches (Brazil and abroad)",
+    "resume.exp.1.desc.1": "Installation and maintenance of industrial scales and systems",
+    "resume.exp.1.desc.2": "Remote and on-site support focused on operational efficiency",
+    
+    "resume.exp.2.title": "Volunteer Digital Investigator",
+    "resume.exp.2.company": "Personal Project",
+    "resume.exp.2.period": "2022 – Present",
+    "resume.exp.2.location": "Online",
+    "resume.exp.2.desc.0": "Free support for online scam victims: tracking and reporting",
+    "resume.exp.2.desc.1": "Use of OSINT tools and forensic techniques",
+    "resume.exp.2.desc.2": "Prevention and recovery of digital fraud cases",
+    
+    "resume.exp.3.title": "IT Technician and Data Recovery",
+    "resume.exp.3.company": "Freelancer",
+    "resume.exp.3.period": "2020 – 2022",
+    "resume.exp.3.location": "Cuiabá, MT",
+    "resume.exp.3.desc.0": "Hardware maintenance, networks, and data recovery",
+    "resume.exp.3.desc.1": "System implementation and user support",
+    "resume.exp.3.desc.2": "Python automation for process optimization",
+    
+    // Resume certifications
+    "resume.cert.0": "TryHackMe – Penetration Testing and Cybersecurity Fundamentals",
+    "resume.cert.1": "Udemy – Python for Automation and Web Scraping",
+    "resume.cert.2": "Alura – Git, Docker, Clean Architecture",
+    "resume.cert.3": "Hack The Box Labs – Vulnerability Analysis and Exploitation",
+    
+    // Resume volunteer work
+    "resume.volunteer.0": "Distribution of 130+ anti-COVID kits in popular market with local media recognition",
+    "resume.volunteer.1": "Technical leadership of international community with over 11 thousand members",
+    "resume.volunteer.2": "Technical support at educational events and mentoring",
   },
 }
 

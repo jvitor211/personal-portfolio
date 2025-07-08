@@ -4,9 +4,10 @@ import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 import { Calendar, MapPin, Mail, Phone, Linkedin, Download, Award, Briefcase, Users, Heart } from "lucide-react"
 import { AnimatedGradient } from "./ui/animated-gradient"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, useIntl } from "react-intl"
 import { useState } from "react"
 import jsPDF from 'jspdf'
+import { useLanguage } from "../contexts/LanguageContext"
 
 const Resume = () => {
   const [ref, inView] = useInView({
@@ -15,78 +16,77 @@ const Resume = () => {
   })
 
   const [isDownloading, setIsDownloading] = useState(false)
+  const { language } = useLanguage()
+  const intl = useIntl()
 
-  const experiences = [
+  // Dynamic data based on current language
+  const getExperienceData = () => [
     {
-      title: "Desenvolvedor Full Stack",
-      company: "Amaggi",
-      period: "2023 – Presente",
-      location: "Cuiabá, MT",
+      title: intl.formatMessage({ id: "resume.exp.0.title" }),
+      company: intl.formatMessage({ id: "resume.exp.0.company" }),
+      period: intl.formatMessage({ id: "resume.exp.0.period" }),
+      location: intl.formatMessage({ id: "resume.exp.0.location" }),
       type: "current",
       description: [
-        "Desenvolvimento de MVPs e novas funcionalidades em .NET e React",
-        "Foco em performance, usabilidade e design moderno",
-        "Integração com serviços Azure, APIs REST e bancos de dados"
+        intl.formatMessage({ id: "resume.exp.0.desc.0" }),
+        intl.formatMessage({ id: "resume.exp.0.desc.1" }),
+        intl.formatMessage({ id: "resume.exp.0.desc.2" })
       ]
     },
     {
-      title: "Técnico de Suporte N2",
-      company: "Lanlink",
-      period: "Abr 2023 – Out 2023",
-      location: "Remoto/Presencial",
+      title: intl.formatMessage({ id: "resume.exp.1.title" }),
+      company: intl.formatMessage({ id: "resume.exp.1.company" }),
+      period: intl.formatMessage({ id: "resume.exp.1.period" }),
+      location: intl.formatMessage({ id: "resume.exp.1.location" }),
       type: "past",
       description: [
-        "Suporte técnico a 80 filiais (Brasil e exterior)",
-        "Instalação e manutenção de balanças industriais e sistemas",
-        "Suporte remoto e presencial com foco em eficiência operacional"
+        intl.formatMessage({ id: "resume.exp.1.desc.0" }),
+        intl.formatMessage({ id: "resume.exp.1.desc.1" }),
+        intl.formatMessage({ id: "resume.exp.1.desc.2" })
       ]
     },
     {
-      title: "Investigador Digital Voluntário",
-      company: "Projeto Pessoal",
-      period: "2022 – Presente",
-      location: "Online",
+      title: intl.formatMessage({ id: "resume.exp.2.title" }),
+      company: intl.formatMessage({ id: "resume.exp.2.company" }),
+      period: intl.formatMessage({ id: "resume.exp.2.period" }),
+      location: intl.formatMessage({ id: "resume.exp.2.location" }),
       type: "volunteer",
       description: [
-        "Apoio gratuito a vítimas de golpes online: rastreio e denúncia",
-        "Uso de ferramentas OSINT e técnicas forenses",
-        "Prevenção e recuperação de casos de fraude digital"
+        intl.formatMessage({ id: "resume.exp.2.desc.0" }),
+        intl.formatMessage({ id: "resume.exp.2.desc.1" }),
+        intl.formatMessage({ id: "resume.exp.2.desc.2" })
       ]
     },
     {
-      title: "Técnico de TI e Recuperação de Dados",
-      company: "Freelancer",
-      period: "2020 – 2022",
-      location: "Cuiabá, MT",
+      title: intl.formatMessage({ id: "resume.exp.3.title" }),
+      company: intl.formatMessage({ id: "resume.exp.3.company" }),
+      period: intl.formatMessage({ id: "resume.exp.3.period" }),
+      location: intl.formatMessage({ id: "resume.exp.3.location" }),
       type: "freelance",
       description: [
-        "Manutenção de hardware, redes e recuperação de dados",
-        "Implantação de sistemas e suporte a usuários",
-        "Automações com Python para otimização de processos"
+        intl.formatMessage({ id: "resume.exp.3.desc.0" }),
+        intl.formatMessage({ id: "resume.exp.3.desc.1" }),
+        intl.formatMessage({ id: "resume.exp.3.desc.2" })
       ]
     }
   ]
 
-  const certifications = [
-    "TryHackMe – Fundamentos de Pentest e Cibersegurança",
-    "Udemy – Python para Automação e Web Scraping",
-    "Alura – Git, Docker, Clean Architecture",
-    "Hack The Box Labs – Análise e exploração de vulnerabilidades"
+  const getCertifications = () => [
+    intl.formatMessage({ id: "resume.cert.0" }),
+    intl.formatMessage({ id: "resume.cert.1" }),
+    intl.formatMessage({ id: "resume.cert.2" }),
+    intl.formatMessage({ id: "resume.cert.3" })
   ]
 
-  const volunteerWork = [
-    "Distribuição de 130+ kits anti-COVID em mercado popular com reconhecimento da mídia local",
-    "Liderança técnica de comunidade internacional com mais de 11 mil membros",
-    "Suporte técnico em eventos educacionais e de mentoria"
+  const getVolunteerWork = () => [
+    intl.formatMessage({ id: "resume.volunteer.0" }),
+    intl.formatMessage({ id: "resume.volunteer.1" }),
+    intl.formatMessage({ id: "resume.volunteer.2" })
   ]
 
-  const skills = [
-    "Linguagens: C#, JavaScript, Python, SQL, TypeScript",
-    "Frameworks: .NET, React, Next.js",
-    "Ferramentas: Azure, Docker, Git, Postman, VSCode",
-    "Segurança: Pentest, OSINT, Análise de Malware, Ethical Hacking",
-    "Automação: n8n, Python Scripts, PowerShell"
-  ]
+  const experiences = getExperienceData()
+  const certifications = getCertifications()
+  const volunteerWork = getVolunteerWork()
 
   const getTypeColor = (type: string) => {
     switch (type) {
@@ -110,205 +110,222 @@ const Resume = () => {
     try {
       setIsDownloading(true)
       
-      // Cria novo documento PDF
+      // Create new PDF document
       const pdf = new jsPDF()
       
-      // Configurações
+      // Configuration
       let currentY = 20
       const marginLeft = 20
       const marginRight = 20
       const pageWidth = pdf.internal.pageSize.width
       const usableWidth = pageWidth - marginLeft - marginRight
       
-      // Nome (título principal)
+      // Texts based on current language
+      const texts = {
+        pt: {
+          name: 'João Rondon',
+          contact: 'Cuiabá, MT – Brasil | jvbarbosa211@gmail.com | +55 65 99268-1781',
+          linkedin: 'LinkedIn: linkedin.com/in/joao-rondon-3453001b1',
+          objective: 'Objetivo',
+          objectiveText: 'Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, desenvolvimento full stack e ações de impacto social. Buscando oportunidades que aliem tecnologia, propósito e aprendizado contínuo.',
+          experience: 'Experiência Profissional',
+          education: 'Educação',
+          certifications: 'Certificações e Cursos',
+          volunteer: 'Voluntariado e Projetos',
+          skills: 'Habilidades',
+          languages: '- Idiomas: Português (nativo), Inglês (intermediário)'
+        },
+        en: {
+          name: 'João Rondon',
+          contact: 'Cuiabá, MT – Brazil | jvbarbosa211@gmail.com | +55 65 99268-1781',
+          linkedin: 'LinkedIn: linkedin.com/in/joao-rondon-3453001b1',
+          objective: 'Objective',
+          objectiveText: 'Self-taught professional passionate about cybersecurity and development, with practical experience in technical support, full stack development, and social impact initiatives. Seeking opportunities that combine technology, purpose, and continuous learning.',
+          experience: 'Professional Experience',
+          education: 'Education',
+          certifications: 'Certifications and Courses',
+          volunteer: 'Volunteer Work and Projects',
+          skills: 'Skills',
+          languages: '- Languages: Portuguese (native), English (intermediate)'
+        }
+      }
+      
+      const currentTexts = texts[language as keyof typeof texts]
+      
+      // Name (main title)
       pdf.setFontSize(18)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('João Rondon', marginLeft, currentY)
+      pdf.text(currentTexts.name, marginLeft, currentY)
       currentY += 10
       
-      // Informações de contato
+      // Contact information
       pdf.setFontSize(10)
       pdf.setFont('helvetica', 'normal')
-      pdf.text('Cuiabá, MT – Brasil | jvbarbosa211@gmail.com | +55 65 99268-1781', marginLeft, currentY)
+      pdf.text(currentTexts.contact, marginLeft, currentY)
       currentY += 5
-      pdf.text('LinkedIn: linkedin.com/in/joao-rondon-3453001b1', marginLeft, currentY)
+      pdf.text(currentTexts.linkedin, marginLeft, currentY)
       currentY += 15
       
-      // Objetivo
+      // Objective
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Objetivo', marginLeft, currentY)
+      pdf.text(currentTexts.objective, marginLeft, currentY)
       currentY += 8
       
       pdf.setFontSize(10)
       pdf.setFont('helvetica', 'normal')
-      const objetivoText = 'Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, desenvolvimento full stack e ações de impacto social. Buscando oportunidades que aliem tecnologia, propósito e aprendizado contínuo.'
-      const objetivoLines = pdf.splitTextToSize(objetivoText, usableWidth)
-      pdf.text(objetivoLines, marginLeft, currentY)
-      currentY += objetivoLines.length * 5 + 10
+      const objectiveLines = pdf.splitTextToSize(currentTexts.objectiveText, usableWidth)
+      pdf.text(objectiveLines, marginLeft, currentY)
+      currentY += objectiveLines.length * 5 + 10
       
-      // Experiência Profissional
+      // Professional Experience
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Experiência Profissional', marginLeft, currentY)
+      pdf.text(currentTexts.experience, marginLeft, currentY)
       currentY += 10
       
-      // Full Stack Developer – Amaggi
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('Full Stack Developer – Amaggi', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('Cuiabá – 2023–Presente', marginLeft, currentY)
-      currentY += 6
-      pdf.text('- Desenvolvimento .NET e React para novos MVPs e funcionalidades.', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Foco em performance, design moderno e usabilidade.', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Integração com serviços em Azure, APIs REST e banco de dados.', marginLeft, currentY)
-      currentY += 10
+      // Add each experience
+      experiences.forEach((exp, index) => {
+        pdf.setFontSize(11)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text(`${exp.title} – ${exp.company}`, marginLeft, currentY)
+        currentY += 6
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'normal')
+        pdf.text(`${exp.location} – ${exp.period}`, marginLeft, currentY)
+        currentY += 6
+        
+        exp.description.forEach(desc => {
+          const descLines = pdf.splitTextToSize(`- ${desc}`, usableWidth)
+          pdf.text(descLines, marginLeft, currentY)
+          currentY += descLines.length * 5
+        })
+        currentY += 5
+      })
       
-      // N2 Support Technician – Lanlink
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('N2 Support Technician – Lanlink', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('Remoto e Presencial – Abril 2023 a Outubro 2023', marginLeft, currentY)
-      currentY += 6
-      pdf.text('- Suporte técnico para 80 filiais (Brasil e exterior).', marginLeft, currentY)
-      currentY += 5
-      const lanlink1 = pdf.splitTextToSize('- Instalação e manutenção de balanças industriais, computadores e sistemas SAP, Citrix, Microsoft.', usableWidth)
-      pdf.text(lanlink1, marginLeft, currentY)
-      currentY += lanlink1.length * 5
-      pdf.text('- Suporte remoto e presencial, com foco em eficiência operacional.', marginLeft, currentY)
-      currentY += 10
-      
-      // Detetive Digital Voluntário
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('Detetive Digital Voluntário – Projeto Pessoal', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('Online – 2022–Presente', marginLeft, currentY)
-      currentY += 6
-      pdf.text('- Apoio gratuito a vítimas de golpes online, rastreamento e denúncia.', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Utilização de OSINT, técnicas forenses e prevenção digital.', marginLeft, currentY)
-      currentY += 10
-      
-      // Técnico de TI e Recuperação de Dados
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('Técnico de TI e Recuperação de Dados – Freelancer', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('Cuiabá – 2020–2022', marginLeft, currentY)
-      currentY += 6
-      const freelancer1 = pdf.splitTextToSize('- Manutenção de hardware, redes e recuperação de arquivos de HDs danificados.', usableWidth)
-      pdf.text(freelancer1, marginLeft, currentY)
-      currentY += freelancer1.length * 5
-      pdf.text('- Implantação de sistemas, suporte a usuários e automações em Python.', marginLeft, currentY)
-      currentY += 15
-      
-      // Nova página se necessário
+      // Check if new page is needed
       if (currentY > 230) {
         pdf.addPage()
         currentY = 20
       }
       
-      // Educação
+      // Education
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Educação', marginLeft, currentY)
+      pdf.text(currentTexts.education, marginLeft, currentY)
       currentY += 10
       
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('FIAP – Cyber Defense (2025–2026, em andamento)', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('- Pentest, Forense Digital, Phishing, Malware', marginLeft, currentY)
-      currentY += 8
-      
-      pdf.setFontSize(11)
-      pdf.setFont('helvetica', 'bold')
-      pdf.text('Ensino Médio – EE Raimundo Pinheiro (2019)', marginLeft, currentY)
-      currentY += 6
-      pdf.setFontSize(10)
-      pdf.setFont('helvetica', 'normal')
-      pdf.text('- Líder de turma e suporte técnico interno', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Participação em projetos escolares de lógica e tecnologia', marginLeft, currentY)
+      if (language === 'pt') {
+        pdf.setFontSize(11)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('FIAP – Cyber Defense (2025–2026, em andamento)', marginLeft, currentY)
+        currentY += 6
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'normal')
+        pdf.text('- Pentest, Forense Digital, Phishing, Malware', marginLeft, currentY)
+        currentY += 8
+        
+        pdf.setFontSize(11)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('Ensino Médio – EE Raimundo Pinheiro (2019)', marginLeft, currentY)
+        currentY += 6
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'normal')
+        pdf.text('- Líder de turma e suporte técnico interno', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Participação em projetos escolares de lógica e tecnologia', marginLeft, currentY)
+      } else {
+        pdf.setFontSize(11)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('FIAP – Cyber Defense (2025–2026, in progress)', marginLeft, currentY)
+        currentY += 6
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'normal')
+        pdf.text('- Pentest, Digital Forensics, Phishing, Malware', marginLeft, currentY)
+        currentY += 8
+        
+        pdf.setFontSize(11)
+        pdf.setFont('helvetica', 'bold')
+        pdf.text('High School – EE Raimundo Pinheiro (2019)', marginLeft, currentY)
+        currentY += 6
+        pdf.setFontSize(10)
+        pdf.setFont('helvetica', 'normal')
+        pdf.text('- Class leader and internal technical support', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Participation in school logic and technology projects', marginLeft, currentY)
+      }
       currentY += 15
       
-      // Certificações e Cursos
+      // Certifications
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Certificações e Cursos', marginLeft, currentY)
+      pdf.text(currentTexts.certifications, marginLeft, currentY)
       currentY += 8
       
       pdf.setFontSize(10)
       pdf.setFont('helvetica', 'normal')
-      pdf.text('- TryHackMe – Fundamentos de Pentest e Cibersegurança', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Udemy – Python Automação e Web Scraping', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Alura – Git, Docker, Clean Architecture', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Hack The Box Labs – Exploração e análise de vulnerabilidades', marginLeft, currentY)
-      currentY += 15
+      certifications.forEach(cert => {
+        const certLines = pdf.splitTextToSize(`- ${cert}`, usableWidth)
+        pdf.text(certLines, marginLeft, currentY)
+        currentY += certLines.length * 5
+      })
+      currentY += 10
       
-      // Voluntariado e Projetos
+      // Volunteer Work
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Voluntariado e Projetos', marginLeft, currentY)
+      pdf.text(currentTexts.volunteer, marginLeft, currentY)
       currentY += 8
       
       pdf.setFontSize(10)
       pdf.setFont('helvetica', 'normal')
-      const voluntario1 = pdf.splitTextToSize('- Distribuição de 130 kits anti-COVID durante a pandemia com equipe local, reconhecido na imprensa.', usableWidth)
-      pdf.text(voluntario1, marginLeft, currentY)
-      currentY += voluntario1.length * 5
-      pdf.text('- Gestão técnica de comunidade internacional com mais de 11 mil membros.', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Apoio técnico a eventos educacionais e mentorias.', marginLeft, currentY)
-      currentY += 15
+      volunteerWork.forEach(work => {
+        const workLines = pdf.splitTextToSize(`- ${work}`, usableWidth)
+        pdf.text(workLines, marginLeft, currentY)
+        currentY += workLines.length * 5
+      })
+      currentY += 10
       
-      // Habilidades
+      // Skills
       pdf.setFontSize(12)
       pdf.setFont('helvetica', 'bold')
-      pdf.text('Habilidades', marginLeft, currentY)
+      pdf.text(currentTexts.skills, marginLeft, currentY)
       currentY += 8
       
       pdf.setFontSize(10)
       pdf.setFont('helvetica', 'normal')
-      pdf.text('- Linguagens: C#, JavaScript, Python, SQL', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Frameworks: .NET, React', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Ferramentas: Azure, Docker, Git, Postman, VSCode', marginLeft, currentY)
-      currentY += 5
-      pdf.text('- Idiomas: Português (nativo), Inglês (intermediário)', marginLeft, currentY)
+      if (language === 'pt') {
+        pdf.text('- Linguagens: C#, JavaScript, Python, SQL', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Frameworks: .NET, React', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Ferramentas: Azure, Docker, Git, Postman, VSCode', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Idiomas: Português (nativo), Inglês (intermediário)', marginLeft, currentY)
+      } else {
+        pdf.text('- Languages: C#, JavaScript, Python, SQL', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Frameworks: .NET, React', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Tools: Azure, Docker, Git, Postman, VSCode', marginLeft, currentY)
+        currentY += 5
+        pdf.text('- Languages: Portuguese (native), English (intermediate)', marginLeft, currentY)
+      }
       
-      // Salva o PDF
-      pdf.save('CV-Joao-Rondon.pdf')
+      // Save PDF
+      const fileName = language === 'pt' ? 'CV-Joao-Rondon.pdf' : 'Resume-Joao-Rondon.pdf'
+      pdf.save(fileName)
 
-      // Feedback visual
+      // Visual feedback
       setTimeout(() => {
         setIsDownloading(false)
       }, 1500)
       
     } catch (error) {
-      console.error('Erro ao gerar PDF:', error)
+      console.error('Error generating PDF:', error)
       setIsDownloading(false)
       
-      // Fallback: abrir LinkedIn
+      // Fallback: open LinkedIn
       window.open('https://linkedin.com/in/joao-rondon-3453001b1', '_blank')
     }
   }
@@ -325,15 +342,15 @@ const Resume = () => {
         >
           <AnimatedGradient className="inline-block">
             <h2 className="text-3xl md:text-4xl font-bold text-white px-4 py-2">
-              Currículo Profissional
+              <FormattedMessage id="resume.title" />
             </h2>
           </AnimatedGradient>
           <p className="text-gray-400 mt-4">
-            Minha jornada profissional em cibersegurança e desenvolvimento
+            <FormattedMessage id="resume.subtitle" />
           </p>
         </motion.div>
 
-        {/* Header do CV */}
+        {/* CV Header */}
         <motion.div
           className="bg-gradient-to-r from-[#1A1A1A] to-[#252525] rounded-2xl p-8 mb-8 border border-gray-800"
           initial={{ opacity: 0, y: 20 }}
@@ -347,7 +364,7 @@ const Resume = () => {
             <div className="flex-1 text-center md:text-left">
               <h3 className="text-3xl font-bold text-white mb-2">João Rondon</h3>
               <p className="text-lg text-blue-400 mb-4">
-                Pesquisador em Cibersegurança & Desenvolvedor Full Stack
+                <FormattedMessage id="resume.jobTitle" />
               </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-4 text-gray-400">
                 <div className="flex items-center gap-2">
@@ -382,19 +399,19 @@ const Resume = () => {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   />
-                  Baixando...
+                  <FormattedMessage id="resume.downloading" />
                 </>
               ) : (
                 <>
                   <Download className="w-4 h-4" />
-                  Download PDF
+                  <FormattedMessage id="resume.downloadPdf" />
                 </>
               )}
             </motion.button>
           </div>
         </motion.div>
 
-        {/* Objetivo */}
+        {/* Objective */}
         <motion.div
           className="bg-[#1A1A1A] rounded-xl p-6 mb-8 border border-gray-800"
           initial={{ opacity: 0, y: 20 }}
@@ -403,16 +420,15 @@ const Resume = () => {
         >
           <h4 className="text-xl font-semibold text-blue-400 mb-4 flex items-center gap-2">
             <Award className="w-5 h-5" />
-            Objetivo Profissional
+            <FormattedMessage id="resume.objective.title" />
           </h4>
           <p className="text-gray-300 leading-relaxed">
-            Profissional autodidata apaixonado por cibersegurança e desenvolvimento, com experiência prática em suporte técnico, 
-            desenvolvimento full stack e iniciativas de impacto social. Busca oportunidades que unam tecnologia, propósito e aprendizado contínuo.
+            <FormattedMessage id="resume.objective.description" />
           </p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Experiências */}
+          {/* Experiences */}
           <motion.div
             className="space-y-6"
             initial={{ opacity: 0, x: -20 }}
@@ -421,7 +437,7 @@ const Resume = () => {
           >
             <h4 className="text-2xl font-semibold text-white mb-6 flex items-center gap-2">
               <Briefcase className="w-6 h-6 text-blue-400" />
-              Experiência Profissional
+              <FormattedMessage id="resume.experience.title" />
             </h4>
             
             {experiences.map((exp, index) => (
@@ -463,18 +479,18 @@ const Resume = () => {
             ))}
           </motion.div>
 
-          {/* Certificações, Voluntariado e Idiomas */}
+          {/* Certifications, Volunteer Work and Languages */}
           <motion.div
             className="space-y-6"
             initial={{ opacity: 0, x: 20 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            {/* Certificações */}
+            {/* Certifications */}
             <div className="bg-[#1A1A1A] rounded-xl p-6 border border-gray-800">
               <h4 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <Award className="w-5 h-5 text-yellow-400" />
-                Cursos e Certificações
+                <FormattedMessage id="resume.certifications.title" />
               </h4>
               <ul className="space-y-2">
                 {certifications.map((cert, index) => (
@@ -486,11 +502,11 @@ const Resume = () => {
               </ul>
             </div>
 
-            {/* Voluntariado */}
+            {/* Volunteer Work */}
             <div className="bg-[#1A1A1A] rounded-xl p-6 border border-gray-800">
               <h4 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <Heart className="w-5 h-5 text-red-400" />
-                Voluntariado e Projetos
+                <FormattedMessage id="resume.volunteer.title" />
               </h4>
               <ul className="space-y-2">
                 {volunteerWork.map((work, index) => (
@@ -502,20 +518,28 @@ const Resume = () => {
               </ul>
             </div>
 
-            {/* Idiomas */}
+            {/* Languages */}
             <div className="bg-[#1A1A1A] rounded-xl p-6 border border-gray-800">
               <h4 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <Users className="w-5 h-5 text-purple-400" />
-                Idiomas
+                <FormattedMessage id="resume.languages.title" />
               </h4>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Português</span>
-                  <span className="text-purple-400 font-medium">Nativo</span>
+                  <span className="text-gray-300">
+                    <FormattedMessage id="resume.languages.portuguese" />
+                  </span>
+                  <span className="text-purple-400 font-medium">
+                    <FormattedMessage id="resume.languages.native" />
+                  </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-300">Inglês</span>
-                  <span className="text-purple-400 font-medium">Intermediário</span>
+                  <span className="text-gray-300">
+                    <FormattedMessage id="resume.languages.english" />
+                  </span>
+                  <span className="text-purple-400 font-medium">
+                    <FormattedMessage id="resume.languages.intermediate" />
+                  </span>
                 </div>
               </div>
             </div>
